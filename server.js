@@ -26,7 +26,7 @@ function Weather (forecast, time){
 app.get('/location', (request, response) => {
   try{
     let dataFile = require('./data/geo.json');
-    let search_query = dataFile.results[0].address_components[0].long_name;
+    let search_query = request.query.data;
     let formatted_query = dataFile.results[0].formatted_address;
     let latitude = dataFile.results[0].geometry.location.lat;
     let longitude = dataFile.results[0].geometry.location.lng;
