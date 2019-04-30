@@ -24,24 +24,32 @@ function Weather (forecast, time){
 }
 
 app.get('/location', (request, response) => {
-  let dataFile = require('./data/geo.json');
-  let search_query = dataFile.results[0].address_components[0].long_name;
-  let formatted_query = dataFile.results[0].formatted_address;
-  let latitude = dataFile.results[0].geometry.location.lat;
-  let longitude = dataFile.results[0].geometry.location.lng;
-  locationObject = new Location(search_query, formatted_query, latitude, longitude);
-  response.status(200).send(locationObject);
+  try{
+    let dataFile = require('./data/geo.json');
+    let search_query = dataFile.results[0].address_components[0].long_name;
+    let formatted_query = dataFile.results[0].formatted_address;
+    let latitude = dataFile.results[0].geometry.location.lat;
+    let longitude = dataFile.results[0].geometry.location.lng;
+    locationObject = new Location(search_query, formatted_query, latitude, longitude);
+    response.status(200).send(locationObject);
+  } catch(error){
+    response.status(500).send('There is an error on our end sorry');
+  }
 
 });
 
 app.get('/weather', (request, response) => {
   weatherArray = [];
-  let dataFile = require('./data/darksky.json');
-  let weatherForecast = dataFile.daily.data;
-  for(let i =0; i < weatherForecast.length; i++){
-    new Weather(weatherForecast[i].summary, weatherForecast[i].time);
+  try {
+    let dataFile = require('./data/darksky.json');
+    let weatherForecast = dataFile.daily.data;
+    for(let i =0; i < weatherForecast.length; i++){
+      new Weather(weatherForecast[i].summary, weatherForecast[i].time);
+    }
+    response.status(200).send(weatherArray);
+  } catch(error){
+    response.status(500).send('There is an error on our end sorry');
   }
-  response.status(200).send(weatherArray);
 });
 
 app.use('*', (request, response) => response.send('Sorry, that route does not exist.'))
