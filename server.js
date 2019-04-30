@@ -18,7 +18,7 @@ function Location (search_query, formatted_query, latitude, longitude){
   this.longitude = longitude;
 }
 function Weather (forecast, time){
-  this.summary = forecast;
+  this.forecast = forecast;
   this.time = new Date(time).toString();
   weatherArray.push(this);
 }
