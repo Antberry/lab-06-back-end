@@ -19,7 +19,7 @@ function Location (search_query, formatted_query, latitude, longitude){
 }
 function Weather (forecast, time){
   this.summary = forecast;
-  this.time = time;
+  this.time = new Date(time).toString();
   weatherArray.push(this);
 }
 
@@ -37,20 +37,12 @@ app.get('/location', (request, response) => {
 app.get('/weather', (request, response) => {
   weatherArray = [];
   let dataFile = require('./data/darksky.json');
-  let weatherForecast = dataFile.daily.data[0];
-  // for(let i =0; i < weatherForecast.length; i++){
-  //   new Weather(weatherForecast.summary, new Date(weatherForecast.time));
-  // }
-  response.status(200).send(weatherForecast);
+  let weatherForecast = dataFile.daily.data;
+  for(let i =0; i < weatherForecast.length; i++){
+    new Weather(weatherForecast[i].summary, weatherForecast[i].time);
+  }
+  response.status(200).send(weatherArray);
 });
-// app.get('/location', (request, response) => {
-//   let LongNLats = {
-//     departure: Date.now(),
-//     canFly: true,
-//     pilot: 'Well Trained'
-//   }
-//   response.status(200).json(airplanes);
-// });
 
 app.use('*', (request, response) => response.send('Sorry, that route does not exist.'))
 
